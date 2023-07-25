@@ -1,6 +1,10 @@
 import streamlit as st
 import random
 import pickle
+
+from streamlit.runtime.state import SessionState
+
+
 def load_players():
     try:
         with open("players.pkl", "rb") as f:
@@ -17,14 +21,18 @@ def save_players(players):
 igraci = load_players()
 
 
+
 st.title("Izbor dve lose ekipe")
 
 
-dodavanjeIgraca = st.text_input("Dodaj novog igraca")
+dodavanjeIgraca = st.text_input("Dodaj novog igraca",)
 noviigrac = st.button("Dodaj")
 if noviigrac and dodavanjeIgraca.strip()!="":
     igraci.append(dodavanjeIgraca.strip())
     save_players(igraci)
+
+
+
 
 
 selected_players_placeholder = st.empty()
@@ -44,6 +52,7 @@ if izaberiDugme:
     tim1 = izabranaLista[:6]
     tim2 = izabranaLista[6:]
 
+
     st.write("Tim1:")
     for i, player in enumerate(tim1, start=1):
         st.write(f"{i}. {player}")
@@ -52,3 +61,12 @@ if izaberiDugme:
     for i, player in enumerate(tim2, start=1):
         st.write(f"{i}. {player}")
 
+
+
+
+delete_player = st.multiselect("Izaberi igraca za brisanje",igraci,help="Ovo sluzi za brisanje igraca sa liste")
+delete_button = st.button("Izbrisi")
+
+if delete_button and delete_player:
+    igraci = [player for player in igraci if player not in delete_player]
+    save_players(igraci)
